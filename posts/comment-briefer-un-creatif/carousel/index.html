@@ -12,7 +12,7 @@
 
 	<style>
 		:root{
-			/* Palette Dieyez */
+			/* Palette */
 			--ink:#0f0f0f;
 			--cream:#EDE7DA;
 			--cream2:#F6F2E8;
@@ -31,9 +31,6 @@
 			--title: "Orbitron", system-ui, sans-serif;
 			--body: "League Spartan", system-ui, sans-serif;
 			--mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-
-			/* UI */
-			--radius:0px; /* export stack: no rounded corners */
 		}
 
 		*{ box-sizing:border-box; }
@@ -47,7 +44,7 @@
 			-moz-osx-font-smoothing: grayscale;
 		}
 
-		/* ====== EXPORT STACK ====== */
+		/* ===== EXPORT STACK (vertical) ===== */
 		.stack{
 			display: grid;
 			justify-content: center;
@@ -63,7 +60,7 @@
 			overflow: hidden;
 		}
 
-		/* optional subtle grain, monochrome, 3-6% */
+		/* Grain léger (3-6%), monochrome */
 		.slide::after{
 			content:"";
 			position:absolute;
@@ -75,7 +72,70 @@
 			background-size: 220px 220px;
 		}
 
-		/* Layout inside slide */
+		/* ===== HABILLAGE MICROGRAPHICS (MORE V1 STYLE) ===== */
+
+		/* Frame interne dans la safe zone */
+		.frame{
+			position:absolute;
+			left: var(--padX);
+			right: var(--padX);
+			top: 36px;
+			bottom: calc(var(--footerH) + 40px);
+			border: 1px solid rgba(237,231,218,.14);
+			pointer-events:none;
+		}
+
+		/* Corner marks */
+		.corner{
+			position:absolute;
+			width: 18px;
+			height: 18px;
+			border-color: rgba(201,79,45,.70);
+			border-style: solid;
+			pointer-events:none;
+		}
+		.corner.tl{ top: 28px; left: calc(var(--padX) - 8px); border-width: 1px 0 0 1px; }
+		.corner.tr{ top: 28px; right: calc(var(--padX) - 8px); border-width: 1px 1px 0 0; }
+		.corner.bl{ bottom: calc(var(--footerH) + 32px); left: calc(var(--padX) - 8px); border-width: 0 0 1px 1px; }
+		.corner.br{ bottom: calc(var(--footerH) + 32px); right: calc(var(--padX) - 8px); border-width: 0 1px 1px 0; }
+
+		/* Scanline subtile */
+		.scanline{
+			position:absolute;
+			left: var(--padX);
+			right: var(--padX);
+			top: 64px;
+			height: 1px;
+			background: rgba(237,231,218,.12);
+			pointer-events:none;
+		}
+
+		/* Coord labels */
+		.coord{
+			position:absolute;
+			display:inline-flex;
+			align-items:center;
+			gap: 8px;
+			padding: 6px 10px;
+			border: 1px solid rgba(237,231,218,.18);
+			color: rgba(237,231,218,.45);
+			font-family: var(--mono);
+			font-size: 10px;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+			background: rgba(15,15,15,.55);
+			pointer-events:none;
+		}
+		.coord .pip{
+			width: 6px;
+			height: 6px;
+			background: rgba(201,79,45,.85);
+		}
+		.c1{ top: 110px; right: calc(var(--padX) + 10px); }
+		.c2{ top: 320px; left: calc(var(--padX) + 10px); }
+		.c3{ top: 520px; right: calc(var(--padX) + 24px); }
+
+		/* ===== CONTENT LAYOUT ===== */
 		.safe{
 			position:absolute;
 			inset:0;
@@ -88,7 +148,7 @@
 			justify-content: flex-start;
 		}
 
-		/* Label + title should be visually glued */
+		/* Label collé au titre */
 		.label{
 			font-family: var(--body);
 			font-weight: 900;
@@ -149,21 +209,21 @@
 			line-height: 1;
 			white-space: nowrap;
 		}
-		.hl.a{ background: var(--terra); color: var(--ink); }     /* TERRA_BG + INK_TEXT */
+		.hl.a{ background: var(--terra); color: var(--ink); } /* TERRA_BG + INK_TEXT */
 		.hl.b{ background: var(--ink); color: var(--cream); border: 1px solid rgba(237,231,218,.35);} /* INK_BG + CREAM_TEXT */
-		.hl.c{ background: var(--terra); color: var(--cream);}    /* TERRA_BG + CREAM_TEXT */
+		.hl.c{ background: var(--terra); color: var(--cream);} /* TERRA_BG + CREAM_TEXT */
 
-		/* Comparison (bad vs good must be on same slide) */
+		/* Compare: mauvais vs bon, même slide */
 		.compare{
 			display:grid;
 			grid-template-columns: 1fr 1fr;
 			gap: 26px;
 			margin-top: 26px;
-			max-width: 100%;
 		}
 		.box{
 			border: 1px solid rgba(237,231,218,.22);
 			padding: 22px 22px 20px;
+			background: transparent;
 		}
 		.box.bad{ border-color: rgba(201,79,45,.55); }
 		.box.good{ border-color: rgba(237,231,218,.22); }
@@ -187,7 +247,7 @@
 			color: rgba(237,231,218,.92);
 		}
 
-		/* Bullet list: no cliché cards */
+		/* List: sans cards cliché */
 		.list{
 			margin-top: 26px;
 			display:grid;
@@ -214,7 +274,7 @@
 			color: rgba(237,231,218,.92);
 		}
 
-		/* Quote styling: italic + a bit heavier */
+		/* Quote: italic + un peu plus gras */
 		.quote{
 			margin-top: 26px;
 			font-family: var(--body);
@@ -260,32 +320,37 @@
 			white-space: pre;
 		}
 
-		.badges{
+		.microBadges{
 			display:inline-flex;
 			gap: 10px;
 			margin-left: 10px;
 			vertical-align: baseline;
 		}
-		.badge{
+		.microBadge{
 			display:inline-flex;
 			align-items:center;
 			justify-content:center;
-			width: 20px;
-			height: 20px;
-			border: 1px solid rgba(237,231,218,.35);
-			color: rgba(237,231,218,.70);
+			width: 18px;
+			height: 18px;
+			border: 1px solid rgba(237,231,218,.28);
+			color: rgba(237,231,218,.55);
 			font-family: var(--mono);
-			font-size: 10px;
+			font-size: 9px;
 			line-height: 1;
 		}
 
-		/* Mobile preview only (export print stays perfect) */
+		/* Mobile preview only */
 		@media (max-width: 520px){
 			:root{
 				--padX:22px;
 				--padTop:34px;
 				--footerH:118px;
 			}
+			.frame{ top: 18px; }
+			.corner{ display:none; }
+			.coord{ display:none; }
+			.scanline{ top: 44px; }
+
 			.h1{ font-size: 44px; }
 			.h2{ font-size: 38px; }
 			.body{ font-size: 18px; max-width: 34ch; line-height: 1.15; }
@@ -318,7 +383,7 @@
 </head>
 
 <body>
-	<!-- identifiers (V1 = date+time) -->
+	<!-- V1 identifiers (date+heure). Tu pourras remplacer par un ID Notion plus tard. -->
 	<!-- SERIAL: 20260506-1422 -->
 	<!-- SN: 2026-LC-20260506-1422 -->
 
@@ -326,6 +391,13 @@
 
 		<!-- 1 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 04.28 Y: 61.73</div>
+			<div class="coord c2"><span class="pip"></span>NODE: A-12</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">BRIEF</div>
 				<h1 class="h1">COMMENT BRIEFER<br>UN CRÉATIF</h1>
@@ -343,12 +415,19 @@
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 2 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 05.11 Y: 58.02</div>
+			<div class="coord c2"><span class="pip"></span>NODE: B-07</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">CONTEXTE</div>
 				<h2 class="h2">TU N’ACHÈTES<br>PAS UNE VIDÉO</h2>
@@ -366,12 +445,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 3 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 03.84 Y: 66.19</div>
+			<div class="coord c2"><span class="pip"></span>NODE: C-21</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">PRINCIPE 1</div>
 				<h2 class="h2">OBJECTIF,<br>PAS EXÉCUTION</h2>
@@ -388,7 +474,7 @@ MORE: DIEYEZ.FR</div>
 				</div>
 
 				<div class="body small" style="margin-top:22px; max-width: 34ch;">
-					La comparaison est sur la même slide, règle respectée.
+					Tu briefes le pourquoi, pas la recette.
 				</div>
 			</div>
 
@@ -398,12 +484,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 4 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 06.02 Y: 54.88</div>
+			<div class="coord c2"><span class="pip"></span>NODE: D-03</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">PRINCIPE 1</div>
 				<h2 class="h2">SI TU BRIEFES<br>UNE EXÉCUTION</h2>
@@ -421,12 +514,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 5 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 04.61 Y: 60.07</div>
+			<div class="coord c2"><span class="pip"></span>NODE: E-09</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">PRINCIPE 2</div>
 				<h2 class="h2">DÉFINIR LE SUCCÈS<br><span class="hl a">AVANT</span></h2>
@@ -444,12 +544,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 6 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 05.48 Y: 56.33</div>
+			<div class="coord c2"><span class="pip"></span>NODE: F-18</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">PRINCIPE 2</div>
 				<h2 class="h2">LE SUCCÈS DOIT<br>ÊTRE NOMMABLE</h2>
@@ -472,12 +579,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 7 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 03.72 Y: 67.01</div>
+			<div class="coord c2"><span class="pip"></span>NODE: G-04</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">PRINCIPE 3</div>
 				<h2 class="h2">DONNER<br>LE CONTEXTE</h2>
@@ -500,12 +614,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 8 -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 06.21 Y: 52.44</div>
+			<div class="coord c2"><span class="pip"></span>NODE: H-15</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">BONUS</div>
 				<h2 class="h2">LA PHRASE<br>QUI DÉBLOQUE</h2>
@@ -515,7 +636,7 @@ MORE: DIEYEZ.FR</div>
 				</div>
 
 				<div class="body small" style="margin-top:18px; max-width: 34ch;">
-					Une citation = italic + un peu plus gras.
+					Citation : italic + un peu plus gras.
 				</div>
 			</div>
 
@@ -525,12 +646,19 @@ MORE: DIEYEZ.FR</div>
 SERIAL: 20260506-1422
 SN: 2026-LC-20260506-1422
 DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
+MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span></div>
 			</div>
 		</section>
 
 		<!-- 9 (CTA micrographics variant) -->
 		<section class="slide">
+			<div class="frame"></div>
+			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+			<div class="scanline"></div>
+			<div class="coord c1"><span class="pip"></span>X: 04.05 Y: 63.40</div>
+			<div class="coord c2"><span class="pip"></span>NODE: Z-01</div>
+			<div class="coord c3"><span class="pip"></span>REV: V1.0</div>
+
 			<div class="safe">
 				<div class="label">CTA</div>
 				<h2 class="h2">TON BRIEF EN<br>10 LIGNES</h2>
@@ -548,7 +676,7 @@ MORE: DIEYEZ.FR</div>
 				<div class="pageNo">9</div>
 				<div class="micro">MODEL: DIEYEZ-CAROUSEL-V1.0
 INPUT: SCROLL SEE BRAIN
-OUTPUT: FOLLOW DIEYEZ<span class="badges"><span class="badge">CE</span><span class="badge">FCC</span><span class="badge">RH</span></span>
+OUTPUT: FOLLOW DIEYEZ<span class="microBadges"><span class="microBadge">CE</span><span class="microBadge">FCC</span><span class="microBadge">RH</span></span>
 DESIGNED: DIEYEZ PARIS FR
 MORE: DIEYEZ.FR</div>
 			</div>
