@@ -5,29 +5,45 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Comment briefer un créatif</title>
 
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@200;300;400;600;800;900&family=Orbitron:wght@400;600;700&family=Geist:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 	<style>
 		:root{
 			--ink:#0f0f0f;
 			--cream:#EDE7DA;
 			--cream2:#F6F2E8;
 			--terra:#C94F2D;
+
+			/* LinkedIn carousel format */
+			--w:1080px;
+			--h:1350px;
+
+			--pad:72px;
+			--safeTop:64px;
+			--safeBottom:86px;
+
+			--radius:28px;
+			--border:1px solid rgba(255,255,255,.08);
 		}
 
 		*{ box-sizing:border-box; }
 		html,body{ height:100%; }
+
 		body{
 			margin:0;
 			background: var(--ink);
 			color: var(--cream);
-			font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+			font-family: Geist, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 		}
 
-		.page{ padding: 16px; }
+		.page{ padding: 18px; }
 
-		/* ÉCRAN: carrousel horizontal */
+		/* Screen carousel container */
 		.carousel-ui{
 			position: relative;
-			max-width: 1080px;
+			max-width: var(--w);
 			margin: 0 auto;
 		}
 
@@ -42,26 +58,227 @@
 		}
 		.carousel-track::-webkit-scrollbar{ display:none; }
 
+		/* Slide base */
 		.slide{
 			flex: 0 0 100%;
 			scroll-snap-align: center;
 			scroll-snap-stop: always;
-			min-height: calc(100dvh - 32px);
-			padding: 24px;
-			display: grid;
-			align-content: start;
-			background: var(--ink);
-			border: 1px solid rgba(255,255,255,.08);
-			border-radius: 16px;
+
+			/* LinkedIn proportions on screen */
+			width: 100%;
+			aspect-ratio: 1080 / 1350;
+
+			border-radius: var(--radius);
+			border: var(--border);
+			background: radial-gradient(900px 600px at 25% 10%, rgba(201,79,45,.10), rgba(0,0,0,0)),
+						radial-gradient(900px 600px at 80% 35%, rgba(237,231,218,.06), rgba(0,0,0,0)),
+						var(--ink);
+			position: relative;
+			overflow: hidden;
 		}
 
-		/* Flèches: desktop only */
+		/* Inner safe area */
+		.safe{
+			position:absolute;
+			inset: 0;
+			padding: var(--pad);
+			display:flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		/* Micro UI */
+		.topbar{
+			display:flex;
+			align-items:flex-start;
+			justify-content: space-between;
+			gap: 16px;
+			padding-top: var(--safeTop);
+		}
+
+		.kicker{
+			font-family: Orbitron, system-ui, sans-serif;
+			font-size: 14px;
+			letter-spacing: .18em;
+			text-transform: uppercase;
+			color: rgba(237,231,218,.75);
+			line-height: 1.2;
+		}
+
+		.pageNo{
+			font-family: Orbitron, system-ui, sans-serif;
+			font-size: 16px;
+			letter-spacing: .10em;
+			color: var(--terra);
+			line-height: 1;
+			padding-top: 2px;
+		}
+
+		/* Big title system */
+		.h1{
+			font-family: "League Spartan", system-ui, sans-serif;
+			font-weight: 900;
+			text-transform: uppercase;
+			letter-spacing: .02em;
+			line-height: .88;
+			margin: 0;
+			font-size: 92px;
+		}
+
+		.h2{
+			font-family: "League Spartan", system-ui, sans-serif;
+			font-weight: 900;
+			text-transform: uppercase;
+			letter-spacing: .02em;
+			line-height: .90;
+			margin: 0;
+			font-size: 72px;
+		}
+
+		.sub{
+			margin-top: 18px;
+			max-width: 44ch;
+			font-size: 22px;
+			line-height: 1.35;
+			color: rgba(237,231,218,.86);
+			font-weight: 300;
+		}
+
+		/* Chips highlight (rectangle behind text, not an effect) */
+		.chips{
+			display:flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 18px;
+		}
+		.chip{
+			display:inline-flex;
+			align-items:center;
+			padding: 10px 14px;
+			border-radius: 12px;
+			background: rgba(255,255,255,.04);
+			border: 1px solid rgba(255,255,255,.10);
+			color: rgba(237,231,218,.92);
+			font-weight: 600;
+			font-size: 16px;
+			letter-spacing: .02em;
+			white-space: nowrap;
+		}
+		.chip.terra{
+			background: var(--terra);
+			border-color: rgba(0,0,0,.0);
+			color: var(--ink);
+			font-weight: 900;
+		}
+		.chip.ink{
+			background: var(--ink);
+			border-color: rgba(237,231,218,.25);
+			color: var(--cream);
+			font-weight: 800;
+		}
+
+		/* Two-column compare block */
+		.compare{
+			display:grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 18px;
+			margin-top: 22px;
+		}
+		.card{
+			border-radius: 18px;
+			border: 1px solid rgba(255,255,255,.10);
+			background: rgba(255,255,255,.03);
+			padding: 18px 18px 16px 18px;
+		}
+		.card.bad{
+			border-color: rgba(201,79,45,.40);
+			background: rgba(201,79,45,.08);
+		}
+		.card.good{
+			border-color: rgba(237,231,218,.20);
+			background: rgba(237,231,218,.05);
+		}
+		.cardLabel{
+			font-family: Orbitron, system-ui, sans-serif;
+			font-size: 12px;
+			letter-spacing: .16em;
+			text-transform: uppercase;
+			margin: 0 0 10px 0;
+			color: rgba(237,231,218,.70);
+		}
+		.card.bad .cardLabel{ color: rgba(201,79,45,.95); }
+		.card.good .cardLabel{ color: rgba(237,231,218,.80); }
+
+		.cardText{
+			margin:0;
+			font-size: 18px;
+			line-height: 1.35;
+			color: rgba(237,231,218,.92);
+			font-weight: 300;
+		}
+
+		/* Bullet list */
+		.ul{
+			margin: 18px 0 0 0;
+			padding: 0;
+			list-style: none;
+			display:grid;
+			gap: 12px;
+			max-width: 58ch;
+		}
+		.li{
+			display:flex;
+			gap: 12px;
+			align-items:flex-start;
+			border-radius: 16px;
+			border: 1px solid rgba(255,255,255,.10);
+			background: rgba(255,255,255,.03);
+			padding: 14px 14px;
+		}
+		.dot{
+			width: 10px;
+			height: 10px;
+			border-radius: 3px;
+			background: var(--terra);
+			margin-top: 6px;
+			flex: 0 0 auto;
+		}
+		.liText{
+			margin: 0;
+			font-size: 18px;
+			line-height: 1.35;
+			color: rgba(237,231,218,.90);
+			font-weight: 300;
+		}
+
+		/* Footer micro */
+		.footer{
+			display:flex;
+			align-items:flex-end;
+			justify-content: space-between;
+			gap: 16px;
+			padding-bottom: var(--safeBottom);
+		}
+		.handle{
+			font-family: Orbitron, system-ui, sans-serif;
+			font-size: 14px;
+			letter-spacing: .14em;
+			text-transform: uppercase;
+			color: rgba(237,231,218,.60);
+		}
+		.note{
+			font-size: 14px;
+			color: rgba(237,231,218,.55);
+			font-weight: 300;
+		}
+
+		/* Desktop arrows */
 		.nav{
 			position: absolute;
 			top: 50%;
 			transform: translateY(-50%);
-			width: 44px;
-			height: 44px;
+			width: 46px;
+			height: 46px;
 			border-radius: 999px;
 			border: none;
 			background: rgba(201,79,45,.95);
@@ -72,129 +289,37 @@
 			display: none;
 			user-select: none;
 		}
-		.nav.prev{ left: -16px; }
-		.nav.next{ right: -16px; }
-
+		.nav.prev{ left: -18px; }
+		.nav.next{ right: -18px; }
 		@media (min-width: 900px){
-			.page{ padding: 24px; }
 			.nav{ display: grid; place-items: center; }
-			.slide{ min-height: min(720px, calc(100vh - 48px)); }
 		}
 
-		/* Typo simple (tu peux remplacer par ton système) */
-		.badge{
-			display:inline-block;
-			padding: 6px 10px;
-			border-radius: 999px;
-			background: rgba(201,79,45,.18);
-			border: 1px solid rgba(201,79,45,.35);
-			color: var(--cream);
-			font-weight: 700;
-			text-transform: uppercase;
-			letter-spacing: .08em;
-			font-size: 12px;
-			margin-bottom: 10px;
-		}
-
-		.h1{
-			font-weight: 900;
-			letter-spacing: .02em;
-			text-transform: uppercase;
-			line-height: 1.02;
-			margin: 0 0 12px 0;
-			font-size: clamp(28px, 5vw, 56px);
-		}
-
-		.p{
-			margin:0;
-			max-width: 70ch;
-			color: rgba(237,231,218,.92);
-			font-size: 16px;
-			line-height: 1.45;
-		}
-
-		.list{
-			margin: 14px 0 0 0;
-			padding-left: 18px;
-			max-width: 72ch;
-			color: rgba(237,231,218,.92);
-			line-height: 1.5;
-		}
-		.list li{ margin: 6px 0; }
-
-		.quote{
-			margin-top: 16px;
-			padding: 14px 14px;
-			border-left: 3px solid rgba(201,79,45,.85);
-			background: rgba(255,255,255,.03);
-			border-radius: 10px;
-			max-width: 75ch;
-			color: rgba(237,231,218,.96);
-			font-weight: 600;
-			font-style: italic;
-		}
-
-		.hl{
-			display: inline-block;
-			padding: 2px 6px;
-			border-radius: 6px;
-			background: var(--terra);
-			color: var(--ink);
-			font-weight: 900;
-		}
-
-		/* PRINT: 1 slide = 1 page */
+		/* PRINT: 1 slide = 1 page, full export */
 		@media print{
-			@page{ size: A4 portrait; margin: 0; }
-
-			body{
-				background: #fff !important;
-				color: #000 !important;
+			@page{
+				size: 1080px 1350px;
+				margin: 0;
 			}
 
-			.page{ padding: 0 !important; }
+			body{ background:#fff !important; color:#000 !important; }
+			.page{ padding:0 !important; }
 
-			.carousel-ui{
-				max-width: none !important;
-				margin: 0 !important;
-			}
-
-			.carousel-track{
-				overflow: visible !important;
-				display: block !important;
-			}
+			.carousel-ui{ max-width:none !important; margin:0 !important; }
+			.carousel-track{ overflow: visible !important; display:block !important; }
 
 			.slide{
+				width: 1080px !important;
+				height: 1350px !important;
+				aspect-ratio: auto !important;
+				border-radius: 0 !important;
+				border: none !important;
 				page-break-after: always;
 				break-after: page;
-
-				width: 210mm;
-				height: 297mm;
-				min-height: 0 !important;
-				border: none !important;
-				border-radius: 0 !important;
-				padding: 18mm;
-
-				background: #fff !important;
-				color: #000 !important;
 			}
 
-			.p, .list, .quote{
-				color: #000 !important;
-				background: transparent !important;
-			}
-
-			.badge{
-				color: #000 !important;
-				border-color: #000 !important;
-				background: transparent !important;
-			}
-
-			.hl{
-				background: #000 !important;
-				color: #fff !important;
-			}
-
+			/* On garde la DA même en print (fond dark) */
+			body{ background: var(--ink) !important; }
 			.nav{ display:none !important; }
 		}
 	</style>
@@ -207,102 +332,249 @@
 
 			<div class="carousel-track" id="track" tabindex="0" aria-label="Carrousel">
 
+				<!-- 1 -->
 				<section class="slide">
-					<div class="badge">Hook</div>
-					<h2 class="h1">Comment briefer un créatif ?</h2>
-					<p class="p">
-						(et pourquoi 90% des porteurs de projet ne le font pas)
-						<br><br>
-						J’ai été briefé des centaines de fois. J’ai briefé moi-même des prestataires.
-						Voici 3 principes qui changent tout, peu importe le métier ou le secteur.
-					</p>
-				</section>
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">BRIEF</div>
+							<div class="pageNo">1</div>
+						</div>
 
-				<section class="slide">
-					<div class="badge">Principe 1</div>
-					<h2 class="h1">Objectif, pas exécution</h2>
-					<p class="p">
-						Le mauvais brief : “On veut une vidéo de 90 secondes, format vertical, avec notre logo à la fin et de la musique entraînante.”
-						<br><br>
-						Le bon brief : “On veut que les gens comprennent en 90 secondes pourquoi notre produit est différent. Pour ça, on a 90 secondes de vidéo en vertical.”
-						<br><br>
-						La nuance n’est pas anodine. Dans le premier cas, tu achètes du temps. Dans le second, tu achètes un résultat.
-						Et le créatif peut proposer mieux que ce que tu avais imaginé.
-					</p>
-				</section>
+						<div>
+							<h1 class="h1">COMMENT<br>BRIEFER<br>UN CRÉATIF</h1>
+							<p class="sub">Et pourquoi la plupart des projets se plantent avant même le premier livrable.</p>
 
-				<section class="slide">
-					<div class="badge">Principe 2</div>
-					<h2 class="h1">Définir le succès <span class="hl">AVANT</span></h2>
-					<p class="p">
-						Question que tu dois te poser :
-						<br><br>
-						“À quoi je vais voir que ce projet a réussi ?”
-						<br><br>
-						Si tu ne peux pas y répondre clairement, n’attends pas du créatif qu’il y réponde à ta place.
-						Il va deviner. Et tu vas recevoir un livrable qui répond à sa définition du succès, pas à la tienne.
-					</p>
-				</section>
+							<div class="chips">
+								<span class="chip terra">3 PRINCIPES</span>
+								<span class="chip">TOUS MÉTIERS</span>
+								<span class="chip">TOUS SECTEURS</span>
+							</div>
+						</div>
 
-				<section class="slide">
-					<div class="badge">Principe 2 (suite)</div>
-					<h2 class="h1">Le succès doit être nommable</h2>
-					<p class="p">
-						Ça peut être :
-					</p>
-					<ul class="list">
-						<li>50 inscriptions</li>
-						<li>1000 vues</li>
-						<li>un investisseur qui dit oui</li>
-						<li>une équipe alignée</li>
-						<li>une marque qu’on reconnaît au premier coup d’œil</li>
-					</ul>
-					<p class="p" style="margin-top:14px;">
-						Peu importe. Mais ça doit être nommable.
-					</p>
-				</section>
-
-				<section class="slide">
-					<div class="badge">Principe 3</div>
-					<h2 class="h1">Contexte, pas juste demande</h2>
-					<p class="p">
-						Un créatif qui connaît :
-					</p>
-					<ul class="list">
-						<li>qui sont tes clients réels</li>
-						<li>ce qui t’a fait rater des projets précédents</li>
-						<li>ce qui se passe dans ton marché en ce moment</li>
-						<li>ce que tu crains secrètement comme retour</li>
-					</ul>
-					<p class="p" style="margin-top:14px;">
-						Livrera systématiquement mieux qu’un créatif qui n’a pas ce genre d’infos.
-						<br><br>
-						Le contexte n’est pas confidentiel, c’est l’oxygène d’un bon projet créatif.
-					</p>
-				</section>
-
-				<section class="slide">
-					<div class="badge">Bonus</div>
-					<h2 class="h1">La phrase qui débloque tout</h2>
-					<div class="quote">
-						“Si je propose quelque chose qui ne vous parle pas, je préfère que vous me le disiez tôt, même maladroitement,
-						plutôt que de polir un retour à la livraison.”
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Swipe</div>
+						</div>
 					</div>
-					<p class="p" style="margin-top:14px;">
-						Dite par toi au créatif, au premier appel, ça change la nature de toute la collaboration.
-					</p>
 				</section>
 
+				<!-- 2 -->
 				<section class="slide">
-					<div class="badge">CTA</div>
-					<h2 class="h1">Tu veux un brief qui marche ?</h2>
-					<p class="p">
-						Écris ton brief en 10 lignes :
-						<br><br>
-						1) objectif, 2) définition du succès, 3) contexte.
-						<br><br>
-						Si tu veux, je te le réécris en “brief pro” à partir de ton brouillon.
-					</p>
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">CONTEXTE</div>
+							<div class="pageNo">2</div>
+						</div>
+
+						<div>
+							<h2 class="h2">TU N’ACHÈTES PAS<br>UNE VIDÉO</h2>
+							<p class="sub">Tu achètes un résultat. Et ça change toute la collaboration.</p>
+
+							<div class="chips">
+								<span class="chip ink">TEMPS</span>
+								<span class="chip">VS</span>
+								<span class="chip terra">RÉSULTAT</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Principe 1 arrive</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 3 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">PRINCIPE 1</div>
+							<div class="pageNo">3</div>
+						</div>
+
+						<div>
+							<h2 class="h2">OBJECTIF,<br>PAS EXÉCUTION</h2>
+							<p class="sub">Le brief doit décrire le “pourquoi”, pas seulement le “quoi”.</p>
+
+							<div class="compare">
+								<div class="card bad">
+									<p class="cardLabel">MAUVAIS</p>
+									<p class="cardText">“Une vidéo 90s, vertical, logo à la fin, musique entraînante.”</p>
+								</div>
+								<div class="card good">
+									<p class="cardLabel">BON</p>
+									<p class="cardText">“En 90s, faire comprendre pourquoi notre produit est différent. Le format sert cet objectif.”</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Même projet, autre résultat</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 4 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">PRINCIPE 1</div>
+							<div class="pageNo">4</div>
+						</div>
+
+						<div>
+							<h2 class="h2">SI TU BRIEFES<br>UNE EXÉCUTION</h2>
+							<p class="sub">Le créatif ne peut pas proposer mieux que ce que tu as imaginé.</p>
+
+							<div class="chips">
+								<span class="chip">TU BLOQUES</span>
+								<span class="chip terra">LA VALEUR</span>
+								<span class="chip">AU NIVEAU “PRODUCTION”</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Principe 2</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 5 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">PRINCIPE 2</div>
+							<div class="pageNo">5</div>
+						</div>
+
+						<div>
+							<h2 class="h2">DÉFINIS LE SUCCÈS<br><span style="color:var(--terra)">AVANT</span> DE CRÉER</h2>
+							<p class="sub">Sinon quelqu’un va le définir à ta place.</p>
+
+							<div class="chips">
+								<span class="chip ink">QUESTION</span>
+								<span class="chip">“À quoi je vois que c’est réussi ?”</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">C’est non négociable</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 6 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">PRINCIPE 2</div>
+							<div class="pageNo">6</div>
+						</div>
+
+						<div>
+							<h2 class="h2">LE SUCCÈS DOIT<br>ÊTRE NOMMABLE</h2>
+							<p class="sub">Pas “j’aime bien”. Un critère observable.</p>
+
+							<div class="chips">
+								<span class="chip">50 INSCRIPTIONS</span>
+								<span class="chip">1000 VUES</span>
+								<span class="chip">UN “OUI” INVESTISSEUR</span>
+								<span class="chip">ÉQUIPE ALIGNÉE</span>
+								<span class="chip">MARQUE RECONNAISSABLE</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Peu importe lequel, choisis</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 7 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">PRINCIPE 3</div>
+							<div class="pageNo">7</div>
+						</div>
+
+						<div>
+							<h2 class="h2">DONNE LE<br>CONTEXTE</h2>
+							<p class="sub">Un bon créatif avec zéro contexte, c’est une voiture de course sans carburant.</p>
+
+							<div class="ul">
+								<div class="li"><span class="dot"></span><p class="liText">Qui sont tes clients réels</p></div>
+								<div class="li"><span class="dot"></span><p class="liText">Ce qui a fait rater les projets précédents</p></div>
+								<div class="li"><span class="dot"></span><p class="liText">Ce qui se passe sur ton marché maintenant</p></div>
+								<div class="li"><span class="dot"></span><p class="liText">Ce que tu crains comme retour</p></div>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Le contexte n’est pas “bonus”</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 8 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">BONUS</div>
+							<div class="pageNo">8</div>
+						</div>
+
+						<div>
+							<h2 class="h2">LA PHRASE QUI<br>DÉBLOQUE TOUT</h2>
+							<p class="sub" style="font-weight:600; font-style:italic; color: rgba(237,231,218,.95); max-width: 52ch;">
+								“Si je propose quelque chose qui ne vous parle pas, dites-le tôt, même maladroitement.
+								Je préfère ça plutôt que de polir un retour à la livraison.”
+							</p>
+
+							<div class="chips">
+								<span class="chip terra">TÔT</span>
+								<span class="chip">MÊME MALADROIT</span>
+								<span class="chip">PAS À LA LIVRAISON</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Ça change la relation</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 9 -->
+				<section class="slide">
+					<div class="safe">
+						<div class="topbar">
+							<div class="kicker">CTA</div>
+							<div class="pageNo">9</div>
+						</div>
+
+						<div>
+							<h2 class="h2">TON BRIEF EN<br>10 LIGNES</h2>
+							<p class="sub">1) objectif, 2) succès, 3) contexte.<br>Rien d’autre avant de produire.</p>
+
+							<div class="chips">
+								<span class="chip ink">OBJECTIF</span>
+								<span class="chip ink">SUCCÈS</span>
+								<span class="chip ink">CONTEXTE</span>
+								<span class="chip terra">@DIEYEZ</span>
+							</div>
+						</div>
+
+						<div class="footer">
+							<div class="handle">@DIEYEZ</div>
+							<div class="note">Fin</div>
+						</div>
+					</div>
 				</section>
 
 			</div>
