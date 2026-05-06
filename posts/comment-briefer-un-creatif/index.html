@@ -1,150 +1,231 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>REGARD - Test Carousel</title>
-  <style>
-    :root{
-      --cream:#EDE7DA;
-      --ink:#0f0f0f;
-      --terra:#C94F2D;
-      --safe:80px;
-      --footerH:160px;
-    }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Carousel</title>
 
-    html, body { margin:0; padding:0; background:var(--cream); }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+	<style>
+		:root{
+			--ink:#0f0f0f;
+			--cream:#EDE7DA;
+			--cream2:#F6F2E8;
+			--terra:#C94F2D;
+		}
 
-    @page { size: 1080px 1350px; margin: 0; }
+		*{ box-sizing:border-box; }
+		html,body{ height:100%; }
+		body{
+			margin:0;
+			background: var(--ink);
+			color: var(--cream);
+			font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+		}
 
-    .carousel { width:1080px; margin:0 auto; }
+		/* Layout global écran */
+		.page{
+			padding: 16px;
+		}
 
-    .slide{
-      width:1080px;
-      height:1350px;
-      background:var(--cream);
-      position:relative;
-      overflow:hidden;
-      page-break-after: always;
-      break-after: page;
-    }
+		/* ÉCRAN: carrousel horizontal */
+		.carousel-ui{
+			position: relative;
+			max-width: 1080px;
+			margin: 0 auto;
+		}
 
-    .content-safe{
-      position:absolute;
-      left:var(--safe);
-      right:var(--safe);
-      top:140px;
-      bottom:var(--safe);
-      padding-bottom: calc(var(--footerH) + 20px);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-      color:var(--ink);
-      gap:18px;
-    }
+		.carousel-track{
+			display: flex;
+			gap: 0;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+			-webkit-overflow-scrolling: touch;
+			scroll-behavior: smooth;
 
-    .label{
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--terra);
-    }
+			/* option: cache scrollbar */
+			scrollbar-width: none;
+		}
+		.carousel-track::-webkit-scrollbar{ display:none; }
 
-    .headline{
-      font-weight: 900;
-      text-transform: uppercase;
-      line-height: 1.10; /* serré MAIS sans chevauchement */
-      font-size: 86px;
-      margin:0;
-    }
+		.slide{
+			flex: 0 0 100%;
+			scroll-snap-align: center;
+			scroll-snap-stop: always;
 
-    .body{
-      font-weight: 300;
-      font-size: 28px;
-      line-height: 1.35;
-      max-width: 820px;
-      margin:0;
-    }
+			/* pour que la slide prenne un “format” lisible à l’écran */
+			min-height: calc(100dvh - 32px);
+			padding: 24px;
+			display: grid;
+			align-content: start;
+			background: var(--ink);
+			border: 1px solid rgba(255,255,255,.08);
+			border-radius: 16px;
+		}
 
-    .highlight{
-      display:inline-block;
-      padding: 10px 18px;
-      border-radius: 12px;
-      background: var(--terra);
-      color: var(--ink);
-      font-weight: 900;
-    }
+		/* Flèches: desktop only */
+		.nav{
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 44px;
+			height: 44px;
+			border-radius: 999px;
+			border: none;
+			background: rgba(201,79,45,.95);
+			color: #0f0f0f;
+			font-size: 28px;
+			font-weight: 900;
+			cursor: pointer;
+			display: none;
+			user-select: none;
+		}
 
-    .footer-safe{
-      position:absolute;
-      left:var(--safe);
-      right:var(--safe);
-      bottom:var(--safe);
-      height:var(--footerH);
-      display:grid;
-      grid-template-columns: auto 1fr;
-      align-items:end;
-      gap:24px;
-      pointer-events:none;
-    }
+		.nav.prev{ left: -16px; }
+		.nav.next{ right: -16px; }
 
-    .page-number{
-      color:var(--terra);
-      font-weight:800;
-      font-size: 18px;
-      line-height: 1;
-    }
+		@media (min-width: 900px){
+			.page{ padding: 24px; }
+			.nav{ display: grid; place-items: center; }
+			.slide{ min-height: min(720px, calc(100vh - 48px)); }
+		}
 
-    .micrographic{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 8px;
-      line-height: 1.15;
-      opacity: .45;
-      text-align:right;
-      white-space:pre;
-    }
-  </style>
+		/* ---- Ton design system de slide (à adapter) ---- */
+		/* Tu peux garder tes classes existantes: .content-safe, .footer-safe, etc. */
+		.h1{
+			font-weight: 900;
+			letter-spacing: .02em;
+			text-transform: uppercase;
+			line-height: 1.02;
+			margin: 0 0 12px 0;
+			font-size: clamp(28px, 5vw, 56px);
+		}
+		.p{
+			margin:0;
+			max-width: 65ch;
+			color: rgba(237,231,218,.9);
+			font-size: 16px;
+			line-height: 1.45;
+		}
+		.badge{
+			display:inline-block;
+			padding: 6px 10px;
+			border-radius: 999px;
+			background: rgba(201,79,45,.18);
+			border: 1px solid rgba(201,79,45,.35);
+			color: var(--cream);
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: .08em;
+			font-size: 12px;
+			margin-bottom: 10px;
+		}
+
+		/* PRINT: on imprime toutes les slides (pas le swipe) */
+		@media print{
+			@page{
+				size: A4 portrait;
+				margin: 0;
+			}
+
+			body{
+				background: #fff !important;
+				color: #000 !important;
+			}
+
+			.page{
+				padding: 0 !important;
+			}
+
+			.carousel-ui{
+				max-width: none !important;
+				margin: 0 !important;
+			}
+
+			.carousel-track{
+				overflow: visible !important;
+				display: block !important;
+			}
+
+			.slide{
+				/* chaque slide = page */
+				page-break-after: always;
+				break-after: page;
+
+				/* en print, on force un format page */
+				width: 210mm;
+				height: 297mm;
+				min-height: 0 !important;
+				border: none !important;
+				border-radius: 0 !important;
+				padding: 18mm;
+
+				background: #fff !important;
+				color: #000 !important;
+			}
+
+			.nav{ display:none !important; }
+		}
+	</style>
 </head>
+
 <body>
-  <div class="carousel">
+	<main class="page">
+		<div class="carousel-ui">
+			<button class="nav prev" type="button" aria-label="Précédent">‹</button>
 
-    <section class="slide">
-      <div class="content-safe">
-        <div class="label">PRINCIPE 2</div>
-        <h1 class="headline">DÉFINIR LE<br>SUCCÈS<br><span class="highlight">AVANT</span> DE<br>CRÉER.</h1>
-      </div>
+			<div class="carousel-track" id="track" tabindex="0" aria-label="Carrousel">
+				<section class="slide">
+					<div class="badge">Principe 1</div>
+					<h2 class="h1">Titre de ta slide 1</h2>
+					<p class="p">Ton contenu ici. Tu peux remettre ton layout exact (content-safe, footer-safe, etc.).</p>
+				</section>
 
-      <div class="footer-safe">
-        <div class="page-number">1</div>
-        <div class="micrographic">MODEL: DIEYEZ-CAROUSEL-V1.0
-SERIAL: 001
-SN: 2026-LC-001
-DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
-      </div>
-    </section>
+				<section class="slide">
+					<div class="badge">Principe 2</div>
+					<h2 class="h1">Titre de ta slide 2</h2>
+					<p class="p">Texte, visuels, etc.</p>
+				</section>
 
-    <section class="slide">
-      <div class="content-safe">
-        <div class="label">CONTEXTE</div>
-        <p class="body">J’ai été briefé des centaines de fois. J’ai briefé moi-même des prestataires et voici <span class="highlight">3 PRINCIPES</span> qui changent tout, peu importe le métier ou le secteur.</p>
-      </div>
+				<section class="slide">
+					<div class="badge">Principe 3</div>
+					<h2 class="h1">Titre de ta slide 3</h2>
+					<p class="p">Texte, visuels, etc.</p>
+				</section>
+			</div>
 
-      <div class="footer-safe">
-        <div class="page-number">2</div>
-        <div class="micrographic">MODEL: DIEYEZ-CAROUSEL-V1.0
-SERIAL: 001
-SN: 2026-LC-001
-DESIGNED: DIEYEZ PARIS FR
-MORE: DIEYEZ.FR</div>
-      </div>
-    </section>
+			<button class="nav next" type="button" aria-label="Suivant">›</button>
+		</div>
+	</main>
 
-  </div>
+	<script>
+		const track = document.getElementById("track");
+		const prev = document.querySelector(".nav.prev");
+		const next = document.querySelector(".nav.next");
+
+		function slideWidth(){
+			const first = track.querySelector(".slide");
+			return first ? first.getBoundingClientRect().width : 0;
+		}
+
+		prev?.addEventListener("click", () => {
+			track.scrollBy({ left: -slideWidth(), behavior: "smooth" });
+		});
+
+		next?.addEventListener("click", () => {
+			track.scrollBy({ left: slideWidth(), behavior: "smooth" });
+		});
+
+		// Bonus: clavier (desktop)
+		track?.addEventListener("keydown", (e) => {
+			if(e.key === "ArrowLeft"){
+				e.preventDefault();
+				track.scrollBy({ left: -slideWidth(), behavior: "smooth" });
+			}
+			if(e.key === "ArrowRight"){
+				e.preventDefault();
+				track.scrollBy({ left: slideWidth(), behavior: "smooth" });
+			}
+		});
+	</script>
 </body>
 </html>
