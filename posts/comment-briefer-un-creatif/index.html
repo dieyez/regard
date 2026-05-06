@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Carousel</title>
+	<title>Comment briefer un créatif</title>
 
 	<style>
 		:root{
@@ -22,10 +22,7 @@
 			font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 		}
 
-		/* Layout global écran */
-		.page{
-			padding: 16px;
-		}
+		.page{ padding: 16px; }
 
 		/* ÉCRAN: carrousel horizontal */
 		.carousel-ui{
@@ -41,8 +38,6 @@
 			scroll-snap-type: x mandatory;
 			-webkit-overflow-scrolling: touch;
 			scroll-behavior: smooth;
-
-			/* option: cache scrollbar */
 			scrollbar-width: none;
 		}
 		.carousel-track::-webkit-scrollbar{ display:none; }
@@ -51,8 +46,6 @@
 			flex: 0 0 100%;
 			scroll-snap-align: center;
 			scroll-snap-stop: always;
-
-			/* pour que la slide prenne un “format” lisible à l’écran */
 			min-height: calc(100dvh - 32px);
 			padding: 24px;
 			display: grid;
@@ -79,7 +72,6 @@
 			display: none;
 			user-select: none;
 		}
-
 		.nav.prev{ left: -16px; }
 		.nav.next{ right: -16px; }
 
@@ -89,23 +81,7 @@
 			.slide{ min-height: min(720px, calc(100vh - 48px)); }
 		}
 
-		/* ---- Ton design system de slide (à adapter) ---- */
-		/* Tu peux garder tes classes existantes: .content-safe, .footer-safe, etc. */
-		.h1{
-			font-weight: 900;
-			letter-spacing: .02em;
-			text-transform: uppercase;
-			line-height: 1.02;
-			margin: 0 0 12px 0;
-			font-size: clamp(28px, 5vw, 56px);
-		}
-		.p{
-			margin:0;
-			max-width: 65ch;
-			color: rgba(237,231,218,.9);
-			font-size: 16px;
-			line-height: 1.45;
-		}
+		/* Typo simple (tu peux remplacer par ton système) */
 		.badge{
 			display:inline-block;
 			padding: 6px 10px;
@@ -120,21 +96,63 @@
 			margin-bottom: 10px;
 		}
 
-		/* PRINT: on imprime toutes les slides (pas le swipe) */
+		.h1{
+			font-weight: 900;
+			letter-spacing: .02em;
+			text-transform: uppercase;
+			line-height: 1.02;
+			margin: 0 0 12px 0;
+			font-size: clamp(28px, 5vw, 56px);
+		}
+
+		.p{
+			margin:0;
+			max-width: 70ch;
+			color: rgba(237,231,218,.92);
+			font-size: 16px;
+			line-height: 1.45;
+		}
+
+		.list{
+			margin: 14px 0 0 0;
+			padding-left: 18px;
+			max-width: 72ch;
+			color: rgba(237,231,218,.92);
+			line-height: 1.5;
+		}
+		.list li{ margin: 6px 0; }
+
+		.quote{
+			margin-top: 16px;
+			padding: 14px 14px;
+			border-left: 3px solid rgba(201,79,45,.85);
+			background: rgba(255,255,255,.03);
+			border-radius: 10px;
+			max-width: 75ch;
+			color: rgba(237,231,218,.96);
+			font-weight: 600;
+			font-style: italic;
+		}
+
+		.hl{
+			display: inline-block;
+			padding: 2px 6px;
+			border-radius: 6px;
+			background: var(--terra);
+			color: var(--ink);
+			font-weight: 900;
+		}
+
+		/* PRINT: 1 slide = 1 page */
 		@media print{
-			@page{
-				size: A4 portrait;
-				margin: 0;
-			}
+			@page{ size: A4 portrait; margin: 0; }
 
 			body{
 				background: #fff !important;
 				color: #000 !important;
 			}
 
-			.page{
-				padding: 0 !important;
-			}
+			.page{ padding: 0 !important; }
 
 			.carousel-ui{
 				max-width: none !important;
@@ -147,11 +165,9 @@
 			}
 
 			.slide{
-				/* chaque slide = page */
 				page-break-after: always;
 				break-after: page;
 
-				/* en print, on force un format page */
 				width: 210mm;
 				height: 297mm;
 				min-height: 0 !important;
@@ -161,6 +177,22 @@
 
 				background: #fff !important;
 				color: #000 !important;
+			}
+
+			.p, .list, .quote{
+				color: #000 !important;
+				background: transparent !important;
+			}
+
+			.badge{
+				color: #000 !important;
+				border-color: #000 !important;
+				background: transparent !important;
+			}
+
+			.hl{
+				background: #000 !important;
+				color: #fff !important;
 			}
 
 			.nav{ display:none !important; }
@@ -174,23 +206,105 @@
 			<button class="nav prev" type="button" aria-label="Précédent">‹</button>
 
 			<div class="carousel-track" id="track" tabindex="0" aria-label="Carrousel">
+
+				<section class="slide">
+					<div class="badge">Hook</div>
+					<h2 class="h1">Comment briefer un créatif ?</h2>
+					<p class="p">
+						(et pourquoi 90% des porteurs de projet ne le font pas)
+						<br><br>
+						J’ai été briefé des centaines de fois. J’ai briefé moi-même des prestataires.
+						Voici 3 principes qui changent tout, peu importe le métier ou le secteur.
+					</p>
+				</section>
+
 				<section class="slide">
 					<div class="badge">Principe 1</div>
-					<h2 class="h1">Titre de ta slide 1</h2>
-					<p class="p">Ton contenu ici. Tu peux remettre ton layout exact (content-safe, footer-safe, etc.).</p>
+					<h2 class="h1">Objectif, pas exécution</h2>
+					<p class="p">
+						Le mauvais brief : “On veut une vidéo de 90 secondes, format vertical, avec notre logo à la fin et de la musique entraînante.”
+						<br><br>
+						Le bon brief : “On veut que les gens comprennent en 90 secondes pourquoi notre produit est différent. Pour ça, on a 90 secondes de vidéo en vertical.”
+						<br><br>
+						La nuance n’est pas anodine. Dans le premier cas, tu achètes du temps. Dans le second, tu achètes un résultat.
+						Et le créatif peut proposer mieux que ce que tu avais imaginé.
+					</p>
 				</section>
 
 				<section class="slide">
 					<div class="badge">Principe 2</div>
-					<h2 class="h1">Titre de ta slide 2</h2>
-					<p class="p">Texte, visuels, etc.</p>
+					<h2 class="h1">Définir le succès <span class="hl">AVANT</span></h2>
+					<p class="p">
+						Question que tu dois te poser :
+						<br><br>
+						“À quoi je vais voir que ce projet a réussi ?”
+						<br><br>
+						Si tu ne peux pas y répondre clairement, n’attends pas du créatif qu’il y réponde à ta place.
+						Il va deviner. Et tu vas recevoir un livrable qui répond à sa définition du succès, pas à la tienne.
+					</p>
+				</section>
+
+				<section class="slide">
+					<div class="badge">Principe 2 (suite)</div>
+					<h2 class="h1">Le succès doit être nommable</h2>
+					<p class="p">
+						Ça peut être :
+					</p>
+					<ul class="list">
+						<li>50 inscriptions</li>
+						<li>1000 vues</li>
+						<li>un investisseur qui dit oui</li>
+						<li>une équipe alignée</li>
+						<li>une marque qu’on reconnaît au premier coup d’œil</li>
+					</ul>
+					<p class="p" style="margin-top:14px;">
+						Peu importe. Mais ça doit être nommable.
+					</p>
 				</section>
 
 				<section class="slide">
 					<div class="badge">Principe 3</div>
-					<h2 class="h1">Titre de ta slide 3</h2>
-					<p class="p">Texte, visuels, etc.</p>
+					<h2 class="h1">Contexte, pas juste demande</h2>
+					<p class="p">
+						Un créatif qui connaît :
+					</p>
+					<ul class="list">
+						<li>qui sont tes clients réels</li>
+						<li>ce qui t’a fait rater des projets précédents</li>
+						<li>ce qui se passe dans ton marché en ce moment</li>
+						<li>ce que tu crains secrètement comme retour</li>
+					</ul>
+					<p class="p" style="margin-top:14px;">
+						Livrera systématiquement mieux qu’un créatif qui n’a pas ce genre d’infos.
+						<br><br>
+						Le contexte n’est pas confidentiel, c’est l’oxygène d’un bon projet créatif.
+					</p>
 				</section>
+
+				<section class="slide">
+					<div class="badge">Bonus</div>
+					<h2 class="h1">La phrase qui débloque tout</h2>
+					<div class="quote">
+						“Si je propose quelque chose qui ne vous parle pas, je préfère que vous me le disiez tôt, même maladroitement,
+						plutôt que de polir un retour à la livraison.”
+					</div>
+					<p class="p" style="margin-top:14px;">
+						Dite par toi au créatif, au premier appel, ça change la nature de toute la collaboration.
+					</p>
+				</section>
+
+				<section class="slide">
+					<div class="badge">CTA</div>
+					<h2 class="h1">Tu veux un brief qui marche ?</h2>
+					<p class="p">
+						Écris ton brief en 10 lignes :
+						<br><br>
+						1) objectif, 2) définition du succès, 3) contexte.
+						<br><br>
+						Si tu veux, je te le réécris en “brief pro” à partir de ton brouillon.
+					</p>
+				</section>
+
 			</div>
 
 			<button class="nav next" type="button" aria-label="Suivant">›</button>
@@ -215,7 +329,6 @@
 			track.scrollBy({ left: slideWidth(), behavior: "smooth" });
 		});
 
-		// Bonus: clavier (desktop)
 		track?.addEventListener("keydown", (e) => {
 			if(e.key === "ArrowLeft"){
 				e.preventDefault();
