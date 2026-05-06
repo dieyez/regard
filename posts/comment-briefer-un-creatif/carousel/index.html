@@ -23,9 +23,14 @@
 			--h:1350px;
 
 			/* Safe zones */
-			--padX:84px;
-			--padTop:92px;
-			--footerH:150px; /* reserved space for micrographics + page number */
+			--padX:92px;      /* + d’air à gauche/droite */
+			--padTop:98px;    /* + d’air en haut */
+			--footerH:160px;  /* zone dédiée micrographics + pagination */
+
+			/* Habillage */
+			--frameInset: 14px; /* éloigne le cadre du texte (évite le D collé) */
+			--hair: rgba(237,231,218,.14);
+			--hair2: rgba(237,231,218,.12);
 
 			/* Type */
 			--title: "Orbitron", system-ui, sans-serif;
@@ -70,72 +75,92 @@
 			mix-blend-mode: overlay;
 			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
 			background-size: 220px 220px;
+			z-index: 0;
 		}
 
-		/* ===== HABILLAGE MICROGRAPHICS (MORE V1 STYLE) ===== */
-
-		/* Frame interne dans la safe zone */
-		.frame{
+		/* ===== HABILLAGE MICROGRAPHICS (BEHIND CONTENT) ===== */
+		.frame,
+		.corner,
+		.scanline,
+		.coord{
 			position:absolute;
-			left: var(--padX);
-			right: var(--padX);
-			top: 36px;
-			bottom: calc(var(--footerH) + 40px);
-			border: 1px solid rgba(237,231,218,.14);
 			pointer-events:none;
+			z-index: 1; /* HABILLAGE = derrière le texte */
 		}
 
-		/* Corner marks */
+		.frame{
+			left: calc(var(--padX) - var(--frameInset));
+			right: calc(var(--padX) - var(--frameInset));
+			top: 42px;
+			bottom: calc(var(--footerH) + 46px);
+			border: 1px solid var(--hair);
+		}
+
 		.corner{
-			position:absolute;
 			width: 18px;
 			height: 18px;
 			border-color: rgba(201,79,45,.70);
 			border-style: solid;
-			pointer-events:none;
+			opacity: .95;
 		}
-		.corner.tl{ top: 28px; left: calc(var(--padX) - 8px); border-width: 1px 0 0 1px; }
-		.corner.tr{ top: 28px; right: calc(var(--padX) - 8px); border-width: 1px 1px 0 0; }
-		.corner.bl{ bottom: calc(var(--footerH) + 32px); left: calc(var(--padX) - 8px); border-width: 0 0 1px 1px; }
-		.corner.br{ bottom: calc(var(--footerH) + 32px); right: calc(var(--padX) - 8px); border-width: 0 1px 1px 0; }
 
-		/* Scanline subtile */
+		.corner.tl{
+			top: 32px;
+			left: calc(var(--padX) - var(--frameInset) - 8px);
+			border-width: 1px 0 0 1px;
+		}
+		.corner.tr{
+			top: 32px;
+			right: calc(var(--padX) - var(--frameInset) - 8px);
+			border-width: 1px 1px 0 0;
+		}
+		.corner.bl{
+			bottom: calc(var(--footerH) + 38px);
+			left: calc(var(--padX) - var(--frameInset) - 8px);
+			border-width: 0 0 1px 1px;
+		}
+		.corner.br{
+			bottom: calc(var(--footerH) + 38px);
+			right: calc(var(--padX) - var(--frameInset) - 8px);
+			border-width: 0 1px 1px 0;
+		}
+
 		.scanline{
-			position:absolute;
-			left: var(--padX);
-			right: var(--padX);
-			top: 64px;
+			left: calc(var(--padX) - var(--frameInset));
+			right: calc(var(--padX) - var(--frameInset));
+			top: 72px;
 			height: 1px;
-			background: rgba(237,231,218,.12);
-			pointer-events:none;
+			background: var(--hair2);
+			opacity: .85;
 		}
 
-		/* Coord labels */
+		/* Coord labels (on les recule et on baisse l’opacité) */
 		.coord{
-			position:absolute;
 			display:inline-flex;
 			align-items:center;
 			gap: 8px;
 			padding: 6px 10px;
-			border: 1px solid rgba(237,231,218,.18);
-			color: rgba(237,231,218,.45);
+			border: 1px solid rgba(237,231,218,.16);
+			color: rgba(237,231,218,.38);
 			font-family: var(--mono);
 			font-size: 10px;
 			letter-spacing: .12em;
 			text-transform: uppercase;
 			background: rgba(15,15,15,.55);
-			pointer-events:none;
+			opacity: .70;
 		}
 		.coord .pip{
 			width: 6px;
 			height: 6px;
 			background: rgba(201,79,45,.85);
 		}
-		.c1{ top: 110px; right: calc(var(--padX) + 10px); }
-		.c2{ top: 320px; left: calc(var(--padX) + 10px); }
-		.c3{ top: 520px; right: calc(var(--padX) + 24px); }
 
-		/* ===== CONTENT LAYOUT ===== */
+		/* Positions = en périphérie, pas dans la zone texte */
+		.c1{ top: 96px; right: calc(var(--padX) - var(--frameInset)); }
+		.c2{ top: 260px; left: calc(var(--padX) - var(--frameInset)); }
+		.c3{ top: 520px; right: calc(var(--padX) - var(--frameInset)); }
+
+		/* ===== CONTENT ===== */
 		.safe{
 			position:absolute;
 			inset:0;
@@ -146,9 +171,9 @@
 			display:flex;
 			flex-direction: column;
 			justify-content: flex-start;
+			z-index: 3; /* TEXTE = au-dessus de l’habillage */
 		}
 
-		/* Label collé au titre */
 		.label{
 			font-family: var(--body);
 			font-weight: 900;
@@ -170,12 +195,12 @@
 
 		.h1{
 			font-size: 92px;
-			line-height: 1.02;
+			line-height: 1.04;
 		}
 
 		.h2{
 			font-size: 74px;
-			line-height: 1.04;
+			line-height: 1.05;
 		}
 
 		.body{
@@ -183,7 +208,7 @@
 			font-family: var(--body);
 			font-weight: 200; /* ultrathin */
 			font-size: 42px;
-			line-height: 1.08;
+			line-height: 1.10;
 			letter-spacing: -.01em;
 			color: rgba(237,231,218,.92);
 			max-width: 20ch;
@@ -191,29 +216,33 @@
 
 		.body.small{
 			font-size: 36px;
-			line-height: 1.12;
-			max-width: 26ch;
+			line-height: 1.14;
+			max-width: 28ch;
 		}
 
-		/* Highlight component */
+		/* Highlight component (padding vertical cohérent, centrage strict) */
 		.hl{
 			display:inline-flex;
 			align-items:center;
 			justify-content:center;
-			padding: 10px 18px;
+
+			padding-inline: 18px;
+			padding-block: 10px;
+
 			border-radius: 14px;
+			line-height: 1;
+
 			font-family: var(--body);
 			font-weight: 900;
 			text-transform: uppercase;
 			letter-spacing: .06em;
-			line-height: 1;
 			white-space: nowrap;
 		}
-		.hl.a{ background: var(--terra); color: var(--ink); } /* TERRA_BG + INK_TEXT */
-		.hl.b{ background: var(--ink); color: var(--cream); border: 1px solid rgba(237,231,218,.35);} /* INK_BG + CREAM_TEXT */
-		.hl.c{ background: var(--terra); color: var(--cream);} /* TERRA_BG + CREAM_TEXT */
+		.hl.a{ background: var(--terra); color: var(--ink); }
+		.hl.b{ background: var(--ink); color: var(--cream); border: 1px solid rgba(237,231,218,.35); }
+		.hl.c{ background: var(--terra); color: var(--cream); }
 
-		/* Compare: mauvais vs bon, même slide */
+		/* Compare */
 		.compare{
 			display:grid;
 			grid-template-columns: 1fr 1fr;
@@ -243,16 +272,16 @@
 			font-family: var(--body);
 			font-weight: 200;
 			font-size: 26px;
-			line-height: 1.22;
+			line-height: 1.24;
 			color: rgba(237,231,218,.92);
 		}
 
-		/* List: sans cards cliché */
+		/* List */
 		.list{
 			margin-top: 26px;
 			display:grid;
 			gap: 14px;
-			max-width: 26ch;
+			max-width: 28ch;
 		}
 		.item{
 			display:flex;
@@ -270,23 +299,23 @@
 			font-family: var(--body);
 			font-weight: 200;
 			font-size: 34px;
-			line-height: 1.08;
+			line-height: 1.10;
 			color: rgba(237,231,218,.92);
 		}
 
-		/* Quote: italic + un peu plus gras */
+		/* Quote */
 		.quote{
 			margin-top: 26px;
 			font-family: var(--body);
 			font-weight: 600;
 			font-style: italic;
 			font-size: 32px;
-			line-height: 1.18;
-			max-width: 26ch;
+			line-height: 1.20;
+			max-width: 28ch;
 			color: rgba(237,231,218,.96);
 		}
 
-		/* ===== MICROGRAPHICS FOOTER SAFE ZONE ===== */
+		/* ===== FOOTER SAFE ZONE ===== */
 		.footerSafe{
 			position:absolute;
 			left: var(--padX);
@@ -298,6 +327,7 @@
 			justify-content: space-between;
 			gap: 24px;
 			pointer-events:none;
+			z-index: 4; /* au-dessus de tout (sauf print) */
 		}
 
 		.pageNo{
@@ -342,11 +372,11 @@
 		/* Mobile preview only */
 		@media (max-width: 520px){
 			:root{
-				--padX:22px;
-				--padTop:34px;
+				--padX:24px;
+				--padTop:36px;
 				--footerH:118px;
+				--frameInset: 10px;
 			}
-			.frame{ top: 18px; }
 			.corner{ display:none; }
 			.coord{ display:none; }
 			.scanline{ top: 44px; }
@@ -363,7 +393,7 @@
 			.pageNo{ font-size: 14px; }
 		}
 
-		/* PRINT: one slide per page, true 1080×1350 */
+		/* PRINT */
 		@media print{
 			@page{
 				size: 1080px 1350px;
@@ -383,7 +413,7 @@
 </head>
 
 <body>
-	<!-- V1 identifiers (date+heure). Tu pourras remplacer par un ID Notion plus tard. -->
+	<!-- V1 identifiers -->
 	<!-- SERIAL: 20260506-1422 -->
 	<!-- SN: 2026-LC-20260506-1422 -->
 
@@ -401,9 +431,7 @@
 			<div class="safe">
 				<div class="label">BRIEF</div>
 				<h1 class="h1">COMMENT BRIEFER<br>UN CRÉATIF</h1>
-				<div class="body">
-					Et pourquoi la plupart des projets se plantent avant le premier livrable.
-				</div>
+				<div class="body">Et pourquoi la plupart des projets se plantent avant le premier livrable.</div>
 				<div class="body small" style="margin-top:18px;">
 					<span class="hl a">3 PRINCIPES</span>
 				</div>
@@ -431,9 +459,7 @@ MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span
 			<div class="safe">
 				<div class="label">CONTEXTE</div>
 				<h2 class="h2">TU N’ACHÈTES<br>PAS UNE VIDÉO</h2>
-				<div class="body">
-					Tu achètes un <span class="hl b">RÉSULTAT</span>.
-				</div>
+				<div class="body">Tu achètes un <span class="hl b">RÉSULTAT</span>.</div>
 				<div class="body small" style="margin-top:18px; max-width: 30ch;">
 					Le format sert l’objectif, pas l’inverse.
 				</div>
@@ -500,9 +526,7 @@ MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span
 			<div class="safe">
 				<div class="label">PRINCIPE 1</div>
 				<h2 class="h2">SI TU BRIEFES<br>UNE EXÉCUTION</h2>
-				<div class="body">
-					Tu bloques la <span class="hl c">VALEUR</span>.
-				</div>
+				<div class="body">Tu bloques la <span class="hl c">VALEUR</span>.</div>
 				<div class="body small" style="margin-top:18px; max-width: 34ch;">
 					Le créatif ne peut pas proposer mieux que ton idée de départ.
 				</div>
@@ -650,7 +674,7 @@ MORE: DIEYEZ.FR<span class="microBadges"><span class="microBadge">CE</span><span
 			</div>
 		</section>
 
-		<!-- 9 (CTA micrographics variant) -->
+		<!-- 9 -->
 		<section class="slide">
 			<div class="frame"></div>
 			<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
